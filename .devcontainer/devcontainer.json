@@ -1,0 +1,17 @@
+{
+  "name": "map-osm",
+  "dockerFile": "./Dockerfile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Anthropic.claude-code",
+        "GitHub.copilot-chat",
+        "GitHub.vscode-pull-request-github",
+        "MS-CEINTL.vscode-language-pack-ja",
+        "oxc.oxc-vscode",
+        "rust-lang.rust-analyzer",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}
