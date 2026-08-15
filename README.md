@@ -1,16 +1,19 @@
-# map
+# map-osm
 
-国土数値情報・国土地理院などの公的なデータを、道路や路線の名称・形状・グラフ化された接続のデータへ加工して配置するプロジェクト。
+OpenStreetMap のデータを複製・加工して、日本の鉄道網・道路網の番号（路線記号、駅番号、路線番号、付番など）、名称、路線の形状を整理したデータを作成するプロジェクト。
 
-## 必要環境
+## 構成
 
-- [rustup](https://rustup.rs/)（ツールチェーンは [rust-toolchain.toml](./rust-toolchain.toml) に従って自動で導入される）
-- [Node.js](https://nodejs.org/) と [pnpm](https://pnpm.io/)（バージョンは [package.json](./package.json) の `devEngines` が管理する）
+ワークスペースは、単一の明確な目的を持つ汎用クレートと、それらを繋ぎ合わせるアプリケーション本体のクレート（`crates/map`）で構成する。クレートの一覧は [Cargo.toml](./Cargo.toml) の `members` を、各クレートの目的は各クレートの Cargo.toml の `description` を参照。
+
+## 環境
+
+- [rustup](https://rustup.rs/)
+- [Node.js](https://nodejs.org/)
+- [pnpm](https://pnpm.io/)
 - [GNU Make](https://www.gnu.org/software/make/)
 
 ## 開発
-
-アプリケーション本体（`crates/map`）を薄く保ち、計算は `crates/` 配下の汎用クレートへ切り出す。
 
 | コマンド      | 内容                                         |
 | ------------- | -------------------------------------------- |
@@ -20,3 +23,7 @@
 | `make check`  | ワークスペースの型検査を行う                 |
 | `make build`  | リリースビルドを行う                         |
 | `make ready`  | format・check・test・lint をまとめて実行する |
+
+## ライセンス
+
+ソースコードは [MIT License](./LICENSE) の下で提供する。OpenStreetMap のデータは © OpenStreetMap contributors であり、複製・加工したデータは [Open Database License (ODbL)](https://www.openstreetmap.org/copyright) に従う。
