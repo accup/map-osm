@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  },
+  "permissions": {
+    "ask": ["Edit(.github/**)", "Write(.github/**)", "Edit(.claude/**)", "Write(.claude/**)"]
+  }
+}
