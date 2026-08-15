@@ -4,7 +4,7 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
-description = "公的な地図データを道路・路線の名称・形状・接続のデータへ加工するアプリケーション本体"
+description = "OpenStreetMap のデータを複製・加工して日本の鉄道網・道路網の番号・名称・路線の形状を整理したデータを作成するアプリケーション本体"
 
 [lints]
 workspace = true
