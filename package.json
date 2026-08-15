@@ -5,7 +5,7 @@
     "format": "oxfmt"
   },
   "devDependencies": {
-    "oxfmt": "^0.59.0"
+    "oxfmt": "^0.63.0"
   },
   "devEngines": {
     "packageManager": {
