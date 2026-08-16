@@ -60,8 +60,8 @@ fn roundtrips_database_content() {
         for (read_point, written_point) in
             read_line.coordinates.iter().zip(&written_line.coordinates)
         {
-            assert!((read_point.0 - written_point.0).abs() < 1e-6);
-            assert!((read_point.1 - written_point.1).abs() < 1e-6);
+            assert!((read_point.0 - written_point.0).abs() < 1e-7);
+            assert!((read_point.1 - written_point.1).abs() < 1e-7);
         }
     }
 }
@@ -180,7 +180,7 @@ fn stores_bounds_from_quantized_coordinates() {
     let path = directory.path().join("features.sqlite");
     let mut content = sample_content();
     // 先頭の緯度は量子化で 0.0 へ丸められるため、索引の最小緯度も 0.0 以下でなければならない。
-    content.lines[1].coordinates = vec![(0.000_000_4, 10.0), (0.1, 10.1)];
+    content.lines[1].coordinates = vec![(0.000_000_04, 10.0), (0.1, 10.1)];
 
     write_database(&path, &content).unwrap();
 
@@ -211,6 +211,6 @@ fn stores_coordinates_as_documented_delta_varint_blobs() {
     let decoded = polyline_codec::decode_coordinates(&blob, COORDINATE_SCALE).unwrap();
 
     assert_eq!(decoded.len(), written.lines[0].coordinates.len());
-    assert!((decoded[0].0 - 35.0).abs() < 1e-6);
-    assert!((decoded[0].1 - 139.0).abs() < 1e-6);
+    assert!((decoded[0].0 - 35.0).abs() < 1e-7);
+    assert!((decoded[0].1 - 139.0).abs() < 1e-7);
 }
