@@ -49,4 +49,5 @@ cargo run --release
 
 ## ライセンス
 
-ソースコードは [MIT License](./LICENSE) の下で提供する。OpenStreetMap のデータは © OpenStreetMap contributors であり、複製・加工したデータは [Open Database License (ODbL)](https://www.openstreetmap.org/copyright) に従う。
+- ソースコードは [MIT License](./LICENSE) の下で提供する。
+- `data/japan-routes.sqlite` は OpenStreetMap のデータ（© OpenStreetMap contributors、[出典](https://www.openstreetmap.org/copyright)）を複製・加工した派生データベースであり、[Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/) の下で提供する。詳細は [data/LICENSE](./data/LICENSE) を参照。アプリケーションなどへ組み込んで再配布する場合は、帰属表示と ODbL の明示を行うこと。
