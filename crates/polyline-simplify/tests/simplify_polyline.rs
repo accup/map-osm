@@ -52,6 +52,24 @@ fn applies_latitude_correction_to_longitude_deviation() {
 }
 
 #[test]
+fn applies_the_upper_bound_scale_to_latitude_distances() {
+    // 中央の点は緯度方向へ 0.000000897 度離れている。1 度あたり距離の上限値による評価では約 0.1002 メートル、赤道円周由来の縮尺による評価では約 0.0999 メートルになるため、許容誤差 0.1 メートルを挟み、距離が上限値の縮尺で評価されることを検証する。
+    let points = [(35.0, 139.0), (35.000_000_897, 139.05), (35.0, 139.1)];
+
+    assert_eq!(simplify_polyline(&points, 0.1).len(), 3);
+    assert_eq!(simplify_polyline(&points, 0.101).len(), 2);
+}
+
+#[test]
+fn applies_the_upper_bound_scale_to_longitude_distances() {
+    // 中央の点は経度方向へ 0.000001095 度離れている。上限値と緯度の絶対値の最小値（35 度）の余弦による評価では約 0.1002 メートル、赤道円周由来の縮尺と緯度の平均値の余弦による評価では約 0.0998 メートルになるため、許容誤差 0.1 メートルを挟む。
+    let points = [(35.0, 139.0), (35.05, 139.000_001_095), (35.1, 139.0)];
+
+    assert_eq!(simplify_polyline(&points, 0.1).len(), 3);
+    assert_eq!(simplify_polyline(&points, 0.101).len(), 2);
+}
+
+#[test]
 fn keeps_all_turning_points_exceeding_tolerance() {
     let points = [
         (35.0, 139.0),
