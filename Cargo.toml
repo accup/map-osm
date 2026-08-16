@@ -5,12 +5,14 @@ members = [
   "crates/map",
   "crates/polyline-codec",
   "crates/polyline-simplify",
+  "crates/tag-classify",
 ]
 
 [workspace.dependencies]
 http-download = { path = "crates/http-download" }
 polyline-codec = { path = "crates/polyline-codec" }
 polyline-simplify = { path = "crates/polyline-simplify" }
+tag-classify = { path = "crates/tag-classify" }
 tempfile = "3"
 ureq = "3"
 

@@ -1,0 +1,10 @@
+[package]
+name = "tag-classify"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "文字列のキーと値の組の集合を条件規則の表で分類する汎用クレート"
+
+[lints]
+workspace = true
