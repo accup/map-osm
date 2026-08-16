@@ -1,0 +1,10 @@
+[package]
+name = "polyline-codec"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "2 次元座標列を固定小数点へ量子化し差分 varint 形式で符号化・復号する汎用コーデック"
+
+[lints]
+workspace = true
