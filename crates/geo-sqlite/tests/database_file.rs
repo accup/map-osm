@@ -168,6 +168,27 @@ fn stores_line_bounds_in_the_spatial_index() {
 }
 
 #[test]
+fn stores_bounds_from_quantized_coordinates() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("features.sqlite");
+    let mut content = sample_content();
+    // 先頭の緯度は量子化で 0.0 へ丸められるため、索引の最小緯度も 0.0 以下でなければならない。
+    content.lines[1].coordinates = vec![(0.000_000_4, 10.0), (0.1, 10.1)];
+
+    write_database(&path, &content).unwrap();
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    let minimum_latitude: f64 = connection
+        .query_row(
+            "SELECT min_latitude FROM line_index WHERE id = 101",
+            (),
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert!(minimum_latitude <= 0.0);
+}
+
+#[test]
 fn stores_coordinates_as_documented_delta_varint_blobs() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
