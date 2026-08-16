@@ -1,0 +1,38 @@
+name: version
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    name: version bump
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Verify the workspace version is raised
+        run: |
+          git fetch --depth 1 origin "$GITHUB_BASE_REF"
+          base=$(git show "origin/$GITHUB_BASE_REF:Cargo.toml" 2>/dev/null | sed -n 's/^version = "\(.*\)"$/\1/p')
+          head=$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml)
+          if [ -z "$head" ]; then
+            echo "Cargo.toml に version がありません" >&2
+            exit 1
+          fi
+          # base に Cargo.toml が存在しない初回の PR は比較の対象外とする
+          if [ -z "$base" ]; then
+            exit 0
+          fi
+          if [ "$head" = "$base" ] || [ "$(printf '%s\n%s\n' "$base" "$head" | sort -V | tail -n 1)" != "$head" ]; then
+            echo "version が引き上げられていません（base: $base, head: $head）" >&2
+            exit 1
+          fi
+      # release ワークフローはリリース候補ブランチの名前からタグを決定するため、version との不一致を検出する
+      - name: Verify the workspace version matches the release branch
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml)
+          if [[ "$GITHUB_HEAD_REF" =~ ^rc/(.+)$ ]] && [ "$version" != "${BASH_REMATCH[1]}" ]; then
+            echo "version がリリース候補ブランチの名前と一致しません（branch: $GITHUB_HEAD_REF, version: $version）" >&2
+            exit 1
+          fi
