@@ -67,3 +67,15 @@ fn fails_to_decode_bytes_ending_in_the_middle_of_a_varint() {
         Err(CodecError::UnexpectedEnd)
     );
 }
+
+#[test]
+fn fails_to_decode_a_varint_longer_than_64_bits() {
+    let bytes = [
+        0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01,
+    ];
+
+    assert_eq!(
+        decode_coordinates(&bytes, 1e6),
+        Err(CodecError::VarintTooLong)
+    );
+}
