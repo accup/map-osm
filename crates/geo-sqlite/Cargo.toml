@@ -9,8 +9,6 @@ description = "点と折れ線の地物を空間索引付きの SQLite データ
 [dependencies]
 polyline-codec = { workspace = true }
 rusqlite = { workspace = true }
-
-[dev-dependencies]
 tempfile = { workspace = true }
 
 [lints]
