@@ -1,27 +1,42 @@
+mod accepted_member_roles;
+mod build_database_content;
+mod build_extraction_filter;
+mod database_metadata;
+mod ensure_japan_osm_pbf;
 mod japan_osm_pbf_path;
 mod japan_osm_pbf_url;
+mod japan_routes_database_path;
+mod line_classification_rules;
+mod point_classification_rules;
+mod point_kind;
+mod relation_classification_rules;
+mod route_kind;
+mod simplify_tolerance_meters;
 
 use std::error::Error;
-use std::fs;
 use std::path::Path;
 
-use crate::japan_osm_pbf_path::JAPAN_OSM_PBF_PATH;
-use crate::japan_osm_pbf_url::JAPAN_OSM_PBF_URL;
+use crate::build_database_content::build_database_content;
+use crate::build_extraction_filter::build_extraction_filter;
+use crate::ensure_japan_osm_pbf::ensure_japan_osm_pbf;
+use crate::japan_routes_database_path::JAPAN_ROUTES_DATABASE_PATH;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let destination = Path::new(JAPAN_OSM_PBF_PATH);
-    if destination.exists() {
-        println!("{JAPAN_OSM_PBF_PATH} が既に存在するため、ダウンロードを省略した");
-        return Ok(());
-    }
+    let pbf_path = ensure_japan_osm_pbf()?;
 
-    if let Some(parent) = destination.parent() {
-        fs::create_dir_all(parent)?;
-    }
+    println!("{} から地物を抽出している", pbf_path.display());
+    let extraction = osm_extract::extract(&pbf_path, &build_extraction_filter())?;
 
-    println!("{JAPAN_OSM_PBF_URL} をダウンロードしている");
-    http_download::download_to_file(JAPAN_OSM_PBF_URL, destination)?;
-    println!("{JAPAN_OSM_PBF_PATH} へ保存した");
+    println!(
+        "地点 {} 件・路線 {} 件・関係 {} 件からデータベースの内容を構築している",
+        extraction.points.len(),
+        extraction.lines.len(),
+        extraction.relations.len()
+    );
+    let content = build_database_content(&extraction);
+
+    geo_sqlite::write_database(Path::new(JAPAN_ROUTES_DATABASE_PATH), &content)?;
+    println!("{JAPAN_ROUTES_DATABASE_PATH} へ保存した");
 
     Ok(())
 }

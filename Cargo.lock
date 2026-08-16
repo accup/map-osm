@@ -321,7 +321,11 @@ checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 name = "map"
 version = "0.2.0"
 dependencies = [
+ "geo-sqlite",
  "http-download",
+ "osm-extract",
+ "polyline-simplify",
+ "tag-classify",
 ]
 
 [[package]]

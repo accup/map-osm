@@ -7,7 +7,11 @@ license.workspace = true
 description = "OpenStreetMap のデータを複製・加工して日本の鉄道網・道路網の番号・名称・路線の形状を整理したデータを作成するアプリケーション本体"
 
 [dependencies]
+geo-sqlite = { workspace = true }
 http-download = { workspace = true }
+osm-extract = { workspace = true }
+polyline-simplify = { workspace = true }
+tag-classify = { workspace = true }
 
 [lints]
 workspace = true
