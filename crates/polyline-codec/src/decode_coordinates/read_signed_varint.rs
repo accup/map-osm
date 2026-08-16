@@ -4,12 +4,15 @@ use crate::codec_error::CodecError;
 ///
 /// # Errors
 ///
-/// varint の途中でバイト列が終端している場合、エラーを返す。
+/// varint の途中でバイト列が終端している場合、または varint が 64 ビットで表現できる長さを超えている場合、エラーを返す。
 pub(crate) fn read_signed_varint(bytes: &[u8]) -> Result<(i64, &[u8]), CodecError> {
     let mut zigzag = 0_u64;
     let mut shift = 0_u32;
 
     for (index, &byte) in bytes.iter().enumerate() {
+        if shift >= u64::BITS {
+            return Err(CodecError::VarintTooLong);
+        }
         zigzag |= u64::from(byte & 0x7f) << shift;
         if byte & 0x80 == 0 {
             #[allow(
