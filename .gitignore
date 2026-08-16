@@ -5,6 +5,9 @@ target/
 # Node.js
 node_modules/
 
+# OpenStreetMap データ
+/data/
+
 # Claude
 .claude/settings.local.json
 .claude/settings.local.json.tmp.*

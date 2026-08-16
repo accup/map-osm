@@ -1,9 +1,14 @@
 [workspace]
 resolver = "3"
-members = ["crates/map"]
+members = ["crates/http-download", "crates/map"]
+
+[workspace.dependencies]
+http-download = { path = "crates/http-download" }
+tempfile = "3"
+ureq = "3"
 
 [workspace.package]
-version = "0.0.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.97.1"
 license = "MIT"

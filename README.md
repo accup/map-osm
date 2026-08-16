@@ -24,6 +24,14 @@ OpenStreetMap のデータを複製・加工して、日本の鉄道網・道路
 | `make build`  | リリースビルドを行う                         |
 | `make ready`  | format・check・test・lint をまとめて実行する |
 
+## データの取得
+
+Geofabrik が配布する日本全域の OpenStreetMap データ（PBF 形式）を `data/japan-latest.osm.pbf` へダウンロードする。保存先にファイルが既に存在する場合はダウンロードを省略する。
+
+```sh
+cargo run --release
+```
+
 ## ライセンス
 
 ソースコードは [MIT License](./LICENSE) の下で提供する。OpenStreetMap のデータは © OpenStreetMap contributors であり、複製・加工したデータは [Open Database License (ODbL)](https://www.openstreetmap.org/copyright) に従う。

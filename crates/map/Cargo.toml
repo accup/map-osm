@@ -6,5 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 description = "OpenStreetMap のデータを複製・加工して日本の鉄道網・道路網の番号・名称・路線の形状を整理したデータを作成するアプリケーション本体"
 
+[dependencies]
+http-download = { workspace = true }
+
 [lints]
 workspace = true
