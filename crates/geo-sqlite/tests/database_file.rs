@@ -175,6 +175,28 @@ fn stores_line_bounds_in_the_spatial_index() {
 }
 
 #[test]
+fn preserves_coordinates_at_1e7_resolution() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("features.sqlite");
+    let mut content = sample_content();
+    // 1e-7 度の格子上にあり 1e-6 度の格子上にはない座標を用いて、分解能の退行を検出する。
+    content.lines[1].coordinates =
+        vec![(35.000_000_1, 139.000_000_7), (35.000_000_3, 139.000_000_9)];
+    content.points[0].latitude = 35.000_000_1;
+    content.points[0].longitude = 139.000_000_7;
+
+    write_database(&path, &content).unwrap();
+    let read = read_database(&path).unwrap();
+
+    assert!((read.lines[1].coordinates[0].0 - 35.000_000_1).abs() < 1e-9);
+    assert!((read.lines[1].coordinates[0].1 - 139.000_000_7).abs() < 1e-9);
+    assert!((read.lines[1].coordinates[1].0 - 35.000_000_3).abs() < 1e-9);
+    assert!((read.lines[1].coordinates[1].1 - 139.000_000_9).abs() < 1e-9);
+    assert!((read.points[0].latitude - 35.000_000_1).abs() < 1e-9);
+    assert!((read.points[0].longitude - 139.000_000_7).abs() < 1e-9);
+}
+
+#[test]
 fn stores_bounds_from_quantized_coordinates() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
