@@ -32,7 +32,20 @@ Geofabrik が配布する日本全域の OpenStreetMap データ（PBF 形式）
 cargo run --release
 ```
 
-データベースは路線の種別・付番・名称と簡略化した形状、地点の種別・付番・名称と座標、および R-tree による空間索引を持つ。
+### データベースの構造
+
+利用側は最初に `metadata` テーブルを読み、出典表示・ライセンスと `kind` 列の値の意味を確認すること。
+
+| テーブル            | 列                                                                     | 内容                                                                                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `metadata`          | `key`・`value`                                                         | 付帯情報。出典表示（`attribution`）・ライセンス（`license`）・取得元（`source`）と、`kind` 列の値の意味（`line_kind.<値>`・`point_kind.<値>`）                                     |
+| `line_group`        | `id`・`kind`・`reference`・`name`                                      | 付番（`reference`）と名称を持つ路線。構成する折れ線は `line_group_member` で参照する                                                                                               |
+| `line`              | `id`・`kind`・`coordinates`                                            | 路線を構成する折れ線。`id` は OSM のウェイの識別子。`coordinates` は（緯度, 経度）の順の座標列を 1e-6 度の固定小数点へ量子化し、直前の点との差分を zigzag varint として並べた BLOB |
+| `line_group_member` | `group_id`・`line_id`                                                  | 路線と折れ線の多対多の対応                                                                                                                                                         |
+| `line_index`        | `id`・`min_latitude`・`max_latitude`・`min_longitude`・`max_longitude` | 折れ線の外接矩形の R-tree 索引。`id` は `line.id` を参照する                                                                                                                       |
+| `point`             | `id`・`kind`・`reference`・`name`・`latitude`・`longitude`             | 駅・インターチェンジの地点。`id` は OSM のノードの識別子。座標は 1e-6 度単位の整数                                                                                                 |
+
+`kind` の値の意味は、路線（`line_group`・`line`）が 1: 鉄道、2: 高速道路、3: 国道、4: 都道府県道、地点（`point`）が 1: 駅、2: インターチェンジである。
 
 ## ライセンス
 
