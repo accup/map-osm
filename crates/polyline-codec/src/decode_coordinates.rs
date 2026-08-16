@@ -3,11 +3,11 @@ mod read_signed_varint;
 use crate::codec_error::CodecError;
 use read_signed_varint::read_signed_varint;
 
-/// [`crate::encode_coordinates`] で符号化されたバイト列を、量子化された整数値を `scale` で割った座標列へ復号する。
+/// [`crate::encode_coordinates`] で符号化されたバイト列を、量子化された整数値を `scale` で割った座標列へ復号する。差分の累算は符号化と対称に、2 の 64 乗を法とする折り返し演算で行う。
 ///
 /// # Errors
 ///
-/// バイト列が座標の途中で終端している場合、エラーを返す。
+/// バイト列が座標の途中で終端している場合、または varint が 64 ビットで表現できる長さを超えている場合、エラーを返す。
 pub fn decode_coordinates(bytes: &[u8], scale: f64) -> Result<Vec<(f64, f64)>, CodecError> {
     let mut coordinates = Vec::new();
 
@@ -18,7 +18,10 @@ pub fn decode_coordinates(bytes: &[u8], scale: f64) -> Result<Vec<(f64, f64)>, C
         let (second_delta, after_second) = read_signed_varint(after_first)?;
         rest = after_second;
 
-        previous = (previous.0 + first_delta, previous.1 + second_delta);
+        previous = (
+            previous.0.wrapping_add(first_delta),
+            previous.1.wrapping_add(second_delta),
+        );
         #[allow(
             clippy::cast_precision_loss,
             reason = "量子化された座標値は f64 の仮数部で表現できる大きさである"
