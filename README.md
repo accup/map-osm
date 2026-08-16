@@ -24,13 +24,15 @@ OpenStreetMap のデータを複製・加工して、日本の鉄道網・道路
 | `make build`  | リリースビルドを行う                         |
 | `make ready`  | format・check・test・lint をまとめて実行する |
 
-## データの取得
+## データの構築
 
-Geofabrik が配布する日本全域の OpenStreetMap データ（PBF 形式）を `data/japan-latest.osm.pbf` へダウンロードする。保存先にファイルが既に存在する場合はダウンロードを省略する。
+Geofabrik が配布する日本全域の OpenStreetMap データ（PBF 形式）を `data/japan-latest.osm.pbf` へダウンロードし（既に存在する場合は省略）、鉄道・高速道路・国道・都道府県道の路線と駅・インターチェンジの地点を抽出して、SQLite データベース `data/japan-routes.sqlite` を構築する。
 
 ```sh
 cargo run --release
 ```
+
+データベースは路線の種別・付番・名称と簡略化した形状、地点の種別・付番・名称と座標、および R-tree による空間索引を持つ。
 
 ## ライセンス
 
