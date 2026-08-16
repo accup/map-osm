@@ -151,6 +151,18 @@ fn preserves_the_existing_database_when_writing_fails() {
 }
 
 #[test]
+fn preserves_unrelated_sibling_files() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("features.sqlite");
+    let sibling_path = directory.path().join("features.sqlite.write");
+    std::fs::write(&sibling_path, b"unrelated").unwrap();
+
+    write_sample(&path);
+
+    assert_eq!(std::fs::read(&sibling_path).unwrap(), b"unrelated");
+}
+
+#[test]
 fn stores_line_bounds_in_the_spatial_index() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
