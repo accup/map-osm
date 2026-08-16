@@ -5,8 +5,10 @@ target/
 # Node.js
 node_modules/
 
-# OpenStreetMap データ
-/data/
+# OpenStreetMap データ（構築したデータベースとそのライセンス文書のみをコミットの対象とする）
+/data/*
+!/data/LICENSE
+!/data/japan-routes.sqlite
 
 # Claude
 .claude/settings.local.json

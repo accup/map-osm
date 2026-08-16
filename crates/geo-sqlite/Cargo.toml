@@ -1,0 +1,15 @@
+[package]
+name = "geo-sqlite"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "点と折れ線の地物を空間索引付きの SQLite データベースとして読み書きする汎用クレート"
+
+[dependencies]
+polyline-codec = { workspace = true }
+rusqlite = { workspace = true }
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

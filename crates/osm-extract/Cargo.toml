@@ -1,0 +1,16 @@
+[package]
+name = "osm-extract"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "OSM PBF ファイルから条件で選別した点・折れ線・関係の地物を座標を解決して抽出する汎用クレート"
+
+[dependencies]
+osmpbf = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

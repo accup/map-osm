@@ -1,0 +1,8 @@
+data/japan-routes.sqlite は、OpenStreetMap のデータを複製・加工した派生データベース（Derivative Database）であり、Open Database License (ODbL) 1.0 の下で提供する。
+
+© OpenStreetMap contributors
+
+- 元データの出典: https://www.openstreetmap.org/copyright
+- ライセンス全文: https://opendatacommons.org/licenses/odbl/1-0/
+
+data/japan-routes.sqlite をアプリケーションなどへ組み込んで再配布する場合は、上記の帰属表示と ODbL の適用の明示を行うこと。
