@@ -1,6 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
+  "crates/geo-sqlite",
   "crates/http-download",
   "crates/map",
   "crates/polyline-codec",
@@ -9,9 +10,11 @@ members = [
 ]
 
 [workspace.dependencies]
+geo-sqlite = { path = "crates/geo-sqlite" }
 http-download = { path = "crates/http-download" }
 polyline-codec = { path = "crates/polyline-codec" }
 polyline-simplify = { path = "crates/polyline-simplify" }
+rusqlite = { version = "0.40.2", features = ["bundled"] }
 tag-classify = { path = "crates/tag-classify" }
 tempfile = "3"
 ureq = "3"
