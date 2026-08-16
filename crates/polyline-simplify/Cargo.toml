@@ -1,0 +1,10 @@
+[package]
+name = "polyline-simplify"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "経緯度で表現された折れ線をメートル単位の許容誤差に基づいて簡略化する汎用クレート"
+
+[lints]
+workspace = true
