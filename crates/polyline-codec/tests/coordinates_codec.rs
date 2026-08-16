@@ -76,6 +76,29 @@ fn fails_to_decode_a_varint_longer_than_64_bits() {
 
     assert_eq!(
         decode_coordinates(&bytes, 1e6),
-        Err(CodecError::VarintTooLong)
+        Err(CodecError::VarintOverflow)
     );
+}
+
+#[test]
+fn fails_to_decode_a_varint_overflowing_in_the_tenth_byte() {
+    let bytes = [
+        0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x02, 0x00,
+    ];
+
+    assert_eq!(
+        decode_coordinates(&bytes, 1e6),
+        Err(CodecError::VarintOverflow)
+    );
+}
+
+#[test]
+fn decodes_a_ten_byte_varint_within_64_bits() {
+    let bytes = [
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00,
+    ];
+
+    let decoded = decode_coordinates(&bytes, 1e6).unwrap();
+
+    assert_eq!(decoded.len(), 1);
 }
