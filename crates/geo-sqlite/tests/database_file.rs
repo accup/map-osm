@@ -129,6 +129,21 @@ fn replaces_an_existing_database_file() {
 }
 
 #[test]
+fn preserves_the_existing_database_when_writing_fails() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("features.sqlite");
+    let written = write_sample(&path);
+
+    let mut invalid = sample_content();
+    invalid.line_groups.clear();
+    write_database(&path, &invalid).unwrap_err();
+    let read = read_database(&path).unwrap();
+
+    assert_eq!(read.line_groups, written.line_groups);
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+}
+
+#[test]
 fn stores_line_bounds_in_the_spatial_index() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
