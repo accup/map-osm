@@ -1,4 +1,5 @@
 mod coordinate_bounds;
+mod quantize_coordinates;
 
 use polyline_codec::encode_coordinates;
 
@@ -6,8 +7,9 @@ use crate::coordinate_scale::COORDINATE_SCALE;
 use crate::geo_sqlite_error::GeoSqliteError;
 use crate::line::Line;
 use coordinate_bounds::coordinate_bounds;
+use quantize_coordinates::quantize_coordinates;
 
-/// 折れ線を、符号化した座標列とともに `line` テーブルへ挿入し、その外接矩形を空間索引 `line_index` へ挿入する。種別は折れ線の列と同じ順序の解決済みの種別の列から与える。
+/// 折れ線を、符号化した座標列とともに `line` テーブルへ挿入し、その外接矩形を空間索引 `line_index` へ挿入する。外接矩形は、格納される座標を索引が包含するよう量子化後の座標から算出する。種別は折れ線の列と同じ順序の解決済みの種別の列から与える。
 ///
 /// # Errors
 ///
@@ -25,8 +27,8 @@ pub(crate) fn insert_lines(
     )?;
 
     for (line, &kind) in lines.iter().zip(line_kinds) {
-        let bounds =
-            coordinate_bounds(&line.coordinates).ok_or(GeoSqliteError::EmptyLine(line.id))?;
+        let quantized = quantize_coordinates(&line.coordinates);
+        let bounds = coordinate_bounds(&quantized).ok_or(GeoSqliteError::EmptyLine(line.id))?;
 
         insert_line.execute((
             line.id,
