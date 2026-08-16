@@ -70,8 +70,15 @@ fn roundtrips_database_content() {
 fn resolves_line_kind_from_the_first_containing_group() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
+    let mut content = sample_content();
+    content.line_groups.push(LineGroup {
+        kind: 9,
+        reference: None,
+        name: None,
+        member_line_ids: vec![100],
+    });
 
-    write_sample(&path);
+    write_database(&path, &content).unwrap();
     let read = read_database(&path).unwrap();
 
     assert_eq!(read.lines[0].kind, Some(3));
@@ -129,6 +136,21 @@ fn replaces_an_existing_database_file() {
 }
 
 #[test]
+fn preserves_the_existing_database_when_writing_fails() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("features.sqlite");
+    let written = write_sample(&path);
+
+    let mut invalid = sample_content();
+    invalid.line_groups.clear();
+    write_database(&path, &invalid).unwrap_err();
+    let read = read_database(&path).unwrap();
+
+    assert_eq!(read.line_groups, written.line_groups);
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+}
+
+#[test]
 fn stores_line_bounds_in_the_spatial_index() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
@@ -150,6 +172,27 @@ fn stores_line_bounds_in_the_spatial_index() {
         .unwrap();
 
     assert_eq!(found, vec![100]);
+}
+
+#[test]
+fn stores_bounds_from_quantized_coordinates() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("features.sqlite");
+    let mut content = sample_content();
+    // 先頭の緯度は量子化で 0.0 へ丸められるため、索引の最小緯度も 0.0 以下でなければならない。
+    content.lines[1].coordinates = vec![(0.000_000_4, 10.0), (0.1, 10.1)];
+
+    write_database(&path, &content).unwrap();
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    let minimum_latitude: f64 = connection
+        .query_row(
+            "SELECT min_latitude FROM line_index WHERE id = 101",
+            (),
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert!(minimum_latitude <= 0.0);
 }
 
 #[test]
