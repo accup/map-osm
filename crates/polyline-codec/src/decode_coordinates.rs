@@ -7,7 +7,7 @@ use read_signed_varint::read_signed_varint;
 ///
 /// # Errors
 ///
-/// バイト列が座標の途中で終端している場合、または varint が 64 ビットで表現できる長さを超えている場合、エラーを返す。
+/// バイト列が座標の途中で終端している場合、または varint が 64 ビットで表現できる範囲を超えている場合、エラーを返す。
 pub fn decode_coordinates(bytes: &[u8], scale: f64) -> Result<Vec<(f64, f64)>, CodecError> {
     let mut coordinates = Vec::new();
 
