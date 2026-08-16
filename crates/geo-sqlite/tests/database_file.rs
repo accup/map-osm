@@ -70,8 +70,15 @@ fn roundtrips_database_content() {
 fn resolves_line_kind_from_the_first_containing_group() {
     let directory = tempfile::tempdir().unwrap();
     let path = directory.path().join("features.sqlite");
+    let mut content = sample_content();
+    content.line_groups.push(LineGroup {
+        kind: 9,
+        reference: None,
+        name: None,
+        member_line_ids: vec![100],
+    });
 
-    write_sample(&path);
+    write_database(&path, &content).unwrap();
     let read = read_database(&path).unwrap();
 
     assert_eq!(read.lines[0].kind, Some(3));
