@@ -4,6 +4,7 @@ members = [
   "crates/geo-sqlite",
   "crates/http-download",
   "crates/map",
+  "crates/osm-extract",
   "crates/polyline-codec",
   "crates/polyline-simplify",
   "crates/tag-classify",
@@ -12,6 +13,8 @@ members = [
 [workspace.dependencies]
 geo-sqlite = { path = "crates/geo-sqlite" }
 http-download = { path = "crates/http-download" }
+osm-extract = { path = "crates/osm-extract" }
+osmpbf = "0.3"
 polyline-codec = { path = "crates/polyline-codec" }
 polyline-simplify = { path = "crates/polyline-simplify" }
 rusqlite = { version = "0.40.2", features = ["bundled"] }
