@@ -17,7 +17,7 @@ osm-extract = { path = "crates/osm-extract" }
 osmpbf = "0.3"
 polyline-codec = { path = "crates/polyline-codec" }
 polyline-simplify = { path = "crates/polyline-simplify" }
-rusqlite = { version = "0.40.2", features = ["bundled"] }
+rusqlite = { version = "0.41.1", features = ["bundled"] }
 tag-classify = { path = "crates/tag-classify" }
 tempfile = "3"
 ureq = "3"
